@@ -10,6 +10,10 @@ void shuffle(int card[]){
             }
         }
     }
+    // for(i = 0; i < SIZE; i++){//print card after doing shuffle
+    //     printf("%d ", card[i]);
+    // }
+    // printf("\n");
 }
 void deal(int card[]){
     int i, j = 0;
