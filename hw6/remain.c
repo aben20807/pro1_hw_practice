@@ -128,25 +128,30 @@ char getSuit(const int n){
 
 int isStraightFlush(const int p[]){
     int j;
-    if((p[0] == 13 && p[1] == 4 && p[2] == 3 && p[3] == 2 && p[4] == 1) ||
-       (p[0] == 26 && p[1] == 17 && p[2] == 16 && p[3] == 15 && p[4] == 14) ||
-       (p[0] == 39 && p[1] == 30 && p[2] == 29 && p[3] == 28 && p[4] == 27) ||
-       (p[0] == 52 && p[1] == 43 && p[2] == 42 && p[3] == 41 && p[4] == 40)){//straight flush a1234
-        return 1;
-        // printf("a1234\n");
-    }
-    for(j = 0; j < 4; j++){//straight flush
-        if(p[j+1] != p[j]-1 || ((p[j+1]-1)/13) != ((p[j]-1)/13)){//order and suit
-            return 0;
+    if((p[0]-1)/13 == (p[1]-1)/13 && (p[0]-1)/13 == (p[2]-1)/13 && (p[0]-1)/13 == (p[3]-1)/13 && (p[0]-1)/13 == (p[4]-1)/13)
+    {
+        if((p[0] == 13 && p[1] == 4 && p[2] == 3 && p[3] == 2 && p[4] == 1) ||
+           (p[0] == 26 && p[1] == 17 && p[2] == 16 && p[3] == 15 && p[4] == 14) ||
+           (p[0] == 39 && p[1] == 30 && p[2] == 29 && p[3] == 28 && p[4] == 27) ||
+           (p[0] == 52 && p[1] == 43 && p[2] == 42 && p[3] == 41 && p[4] == 40)){//straight flush a1234
+            return 1;
+            // printf("a1234\n");
         }
+        for(j = 0; j < 4; j++){//straight flush
+            if(p[j+1] != p[j]-1 ){//order and suit
+                return 0;
+            }
+        }
+        return 1;
     }
-    return 1;
+    else
+        return 0;
 }
 
 int isFourOfAKind(const int p[]){
     if((p[0]%13 == p[1]%13 && p[0]%13 == p[2]%13 && p[0]%13 == p[3]%13) ||
        (p[1]%13 == p[2]%13 && p[1]%13 == p[3]%13 && p[1]%13 == p[4]%13)){//first 4 or last 4
-           return 1;//TODO two same
+           return 1;
        }
     else
         return 0;
