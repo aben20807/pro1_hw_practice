@@ -11,7 +11,8 @@
 
 void rangeAndSuitOfCard(const int, char *, char *);
 void printCardsOnHand(const int []);
-int scoreOfCardType(const int[]);
+int scoreOfCardType(const int[], int[]);
+void compareAndPrintResult(const int[]);
 int cmpfunc (const void * a, const void * b);
 char getSuit(const int);
 int getSuitN(const int n);
@@ -25,4 +26,5 @@ int isStraight(const int []);
 int isThreeOfAKind(const int []);
 int isTwoPairs(const int []);
 int isPair(const int []);
+
 #endif

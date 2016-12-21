@@ -10,7 +10,7 @@ void shuffle(int card[]){
             }
         }
     }
-    // for(i = 0; i < SIZE; i++){//print card after doing shuffle
+    // for(i = 0; i < SIZE; i++){//for debuging: print card after doing shuffle
     //     printf("%d ", card[i]);
     // }
     // printf("\n");

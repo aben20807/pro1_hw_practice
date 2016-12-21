@@ -41,10 +41,9 @@ void printCardsOnHand(const int card[]){
     }
 }
 
-int scoreOfCardType(const int card[]){
+int scoreOfCardType(const int card[], int pScore[]){
     int i, j;
     int p[4][5];
-    int pScore[4] = {0};
     for(i = 0; i < 20; i++){
         if(i < 5){
             p[0][i] = card[i];
@@ -78,39 +77,31 @@ int scoreOfCardType(const int card[]){
             tmp[i] = p[3][i-15];
         }
     }
-    printCardsOnHand(tmp);
+    // printCardsOnHand(tmp);//for debuging: print hand after sorting
     for(i = 0; i < 4; i++){
         if(isStraightFlush(p[i])){
             pScore[i] = getScore(9, getRank(p[i][isStraightFlush(p[i])-1]), getSuitN(p[i][isStraightFlush(p[i])-1]));
-            // printf("P%d:straight flush\n",i+1);
         }
         else if(isFourOfAKind(p[i])){
             pScore[i] = getScore(8, getRank(p[i][isFourOfAKind(p[i])-1]), getSuitN(p[i][isFourOfAKind(p[i])-1]));
-            // printf("P%d:four-of-a-kind\n",i+1);
         }
         else if(isFullHouse(p[i])){
             pScore[i] = getScore(7, getRank(p[i][isFullHouse(p[i])-1]), getSuitN(p[i][isFullHouse(p[i])-1]));
-            // printf("P%d:full house\n",i+1);
         }
         else if(isFlush(p[i])){
             pScore[i] = getScore(6, getRank(p[i][0]), getSuitN(p[i][0]));
-            // printf("P%d:flush\n",i+1);
         }
         else if(isStraight(p[i])){
             pScore[i] = getScore(5, getRank(p[i][0]), getSuitN(p[i][0]));
-            // printf("P%d:straight\n",i+1);
         }
         else if(isThreeOfAKind(p[i])){
             pScore[i] = getScore(4, getRank(p[i][isThreeOfAKind(p[i])-1]), getSuitN(p[i][isThreeOfAKind(p[i])-1]));
-            // printf("P%d:three-of-a-kind\n",i+1);
         }
         else if(isTwoPairs(p[i])){
             pScore[i] = getScore(3, getRank(p[i][isTwoPairs(p[i])-1]), getSuitN(p[i][isTwoPairs(p[i])-1]));
-            // printf("P%d:two pairs\n",i+1);
         }
         else if(isPair(p[i])){
             pScore[i] = getScore(2, getRank(p[i][isPair(p[i])-1]), getSuitN(p[i][isPair(p[i])-1]));
-            // printf("P%d:pair\n",i+1);
         }
         else{//high card
             int tmpMax = getRank(p[i][0]), k, maxIndex = 0;
@@ -121,16 +112,57 @@ int scoreOfCardType(const int card[]){
                 }
             }
             pScore[i] = getScore(1, getRank(p[i][maxIndex]), getSuitN(p[i][maxIndex]));
-            // printf("P%d:high card\n",i+1);
         }
     }
-    printf("\n");
+    // printf("\n");//for debuging: each score of 4 people
+    // for(i = 0; i < 4; i++){
+    //     printf("P%d: %d\n", i+1, pScore[i]);
+    // }
+}
+
+void compareAndPrintResult(const int pScore[]){
+    int tmpMax = 0, maxPerson = -1, i;
     for(i = 0; i < 4; i++){
-        printf("P%d: %d\n", i+1, pScore[i]);
+        if(pScore[i] > tmpMax){
+            maxPerson = i;
+            tmpMax = pScore[i];
+        }
+    }
+    printf("Winner : P%d — ", maxPerson+1);
+    switch(pScore[maxPerson]/1000){
+        case 9:
+            printf("straight flush\n");
+            break;
+        case 8:
+            printf("four-of-a-kind\n");
+            break;
+        case 7:
+            printf("full house\n");
+            break;
+        case 6:
+            printf("flush\n");
+            break;
+        case 5:
+            printf("straight\n");
+            break;
+        case 4:
+            printf("three-of-a-kind\n");
+            break;
+        case 3:
+            printf("two pairs\n");
+            break;
+        case 2:
+            printf("pair\n");
+            break;
+        case 1:
+            printf("high card\n");
+            break;
+        default:
+            break;
     }
 }
 
-int cmpfunc (const void * a, const void * b){
+int cmpfunc (const void * a, const void * b){//sort form big to small
    return ( *(int*)b - *(int*)a );
 }
 
@@ -161,7 +193,6 @@ int isStraightFlush(const int p[]){
     {
         if(getRank(p[0]) == 13 && getRank(p[1]) == 4 && getRank(p[2]) == 3 && getRank(p[3]) == 2 && getRank(p[4]) == 1){//straight flush a1234
             return 2;
-            // printf("a1234\n");
         }
         for(j = 0; j < 4; j++){//straight flush
             if(p[j+1] != p[j]-1 ){//order and suit
@@ -243,7 +274,6 @@ int isStraight(const int p[]){
     int j;
     if(getRank(p[0]) == 13 && getRank(p[1]) == 4 && getRank(p[2]) == 3 && getRank(p[3]) == 2 && getRank(p[4]) == 1){//a1234
         return 2;
-        // printf("a1234\n");
     }
     for(j = 0; j < 4; j++){//straight flush
         if(p[j+1] != p[j]-1){//order and suit
@@ -389,7 +419,7 @@ int isPair(const int p[]){
     else if(getRank(p[2]) == getRank(p[4])){
         return 3;
     }
-    else if(getRank(p[3]) == getRank(p[4])){//first 3 or mid 3 or last 3
+    else if(getRank(p[3]) == getRank(p[4])){
         return 4;
     }
     else
