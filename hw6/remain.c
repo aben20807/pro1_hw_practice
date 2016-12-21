@@ -89,136 +89,146 @@ int scoreOfCardType(const int card[]){
         // printf("%d ", isTwoPairs(p[i]));
         // printf("%d\n", isPair(p[i]));
         if(isStraightFlush(p[i])){
-            pScore[i] = 9;
+            pScore[i] = getScore(9, getRank(p[i][0]), getSuitN(p[i][0]));
             printf("P%d:straight flush\n",i+1);
         }
         else if(isFourOfAKind(p[i])){
-            pScore[i] = 8;
+            pScore[i] = getScore(8, getRank(p[i][isFourOfAKind(p[i])-1]), getSuitN(p[i][isFourOfAKind(p[i])-1]));
             // printf("P%d:four-of-a-kind\n",i+1);
         }
         else if(isFullHouse(p[i])){
-            pScore[i] = 7;
+            pScore[i] = getScore(7, getRank(p[i][isFullHouse(p[i])-1]), getSuitN(p[i][isFullHouse(p[i])-1]));
             // printf("P%d:full house\n",i+1);
         }
         else if(isFlush(p[i])){
-            pScore[i] = 6;
+            pScore[i] = getScore(6, getRank(p[i][0]), getSuitN(p[i][0]));
             // printf("P%d:flush\n",i+1);
         }
         else if(isStraight(p[i])){
-            pScore[i] = 5;
+            pScore[i] = getScore(5, getRank(p[i][0]), getSuitN(p[i][0]));
             // printf("P%d:straight\n",i+1);
         }
         else if(isThreeOfAKind(p[i])){
-            pScore[i] = 4;
+            pScore[i] = getScore(4, getRank(p[i][isThreeOfAKind(p[i])-1]), getSuitN(p[i][isThreeOfAKind(p[i])-1]));
             // printf("P%d:three-of-a-kind\n",i+1);
         }
         else if(isTwoPairs(p[i])){
-            pScore[i] = 3;
+            pScore[i] = getScore(3, getRank(p[i][isTwoPairs(p[i])-1]), getSuitN(p[i][isTwoPairs(p[i])-1]));
             // printf("P%d:two pairs\n",i+1);
         }
         else if(isPair(p[i])){
-            pScore[i] = 2;
+            pScore[i] = getScore(2, getRank(p[i][isPair(p[i])-1]), getSuitN(p[i][isPair(p[i])-1]));
             // printf("P%d:pair\n",i+1);
         }
         else{//high card
-            pScore[i] = 1;
+            int tmpMax = getRank(p[i][0]), k, maxIndex = 0;
+            for(k = 1; k < 5; k++){
+                if(getRank(p[i][k]) > tmpMax){
+                    maxIndex = k;
+                    tmpMax = getRank(p[i][k]);
+                }
+            }
+            pScore[i] = getScore(1, getRank(p[i][maxIndex]), getSuitN(p[i][maxIndex]));
             // printf("P%d:high card\n",i+1);
         }
     }
-    int maxPerson = -1;
-    int tmpScore = -1;
     for(i = 0; i < 4; i++){
-        if(pScore[i] > tmpScore){
-            maxPerson = i;//highest person
-            tmpScore = pScore[i];//highest type score
-        }
+        printf("P%d: %d\n", i+1, pScore[i]);
     }
-    int numOfHightType = 0;
-    int highPeople[4] = {0};
-    for(i = 0; i < 4; i++){//count if more than one is higher
-        if(pScore[i] == tmpScore){
-            numOfHightType++;
-            highPeople[i] = 1;
-        }
-    }
-    if(numOfHightType == 1){
-        printf("Winner : P%d — ", maxPerson+1);
-        if(isStraightFlush(p[maxPerson])){
-            printf("straight flush\n");
-        }
-        else if(isFourOfAKind(p[maxPerson])){
-            printf("four-of-a-kind\n");
-        }
-        else if(isFullHouse(p[maxPerson])){
-            printf("full house\n");
-        }
-        else if(isFlush(p[maxPerson])){
-            printf("flush\n");
-        }
-        else if(isStraight(p[maxPerson])){
-            printf("straight\n");
-        }
-        else if(isThreeOfAKind(p[maxPerson])){
-            printf("three-of-a-kind\n");
-        }
-        else if(isTwoPairs(p[maxPerson])){
-            printf("two pairs\n");
-        }
-        else if(isPair(p[maxPerson])){
-            printf("pair\n");
-        }
-        else{//high card
-            printf("high card\n");
-        }
-    }
-    else if(numOfHightType > 1){
-        tmpScore = -1;
-        if(isStraightFlush(p[maxPerson])){
-            for(i = 0; i < numOfHightType; i++){
-                if(highPeople[i] == 1 && p[i][0] > tmpScore){
-                    maxPerson = i;
-                    tmpScore = p[i][0];
-                }
-            }
-            printf("Winner : P%d — ", maxPerson+1);
-            printf("straight flush\n");
-        }
-        else if(isFourOfAKind(p[maxPerson])){
-            for(i = 0; i < numOfHightType; i++){
-                if(highPeople[i] == 1 && p[i][0] == p[i][1] && p[i][0] > tmpScore){
-                    maxPerson = i;
-                    tmpScore = p[i][0];
-                }
-                else if(highPeople[i] == 1 && p[i][0] == p[i][1] && p[i][0] > tmpScore){//TODO 不只從頭算
-                    maxPerson = i;
-                    tmpScore = p[i][0];
-                }
-            }
-            printf("Winner : P%d — ", maxPerson+1);
-            printf("four-of-a-kind\n");
-        }
-        else if(isFullHouse(p[maxPerson])){
-            printf("full house\n");
-        }
-        else if(isFlush(p[maxPerson])){
-            printf("flush\n");
-        }
-        else if(isStraight(p[maxPerson])){
-            printf("straight\n");
-        }
-        else if(isThreeOfAKind(p[maxPerson])){
-            printf("three-of-a-kind\n");
-        }
-        else if(isTwoPairs(p[maxPerson])){
-            printf("two pairs\n");
-        }
-        else if(isPair(p[maxPerson])){
-            printf("pair\n");
-        }
-        else{//high card
-            printf("high card\n");
-        }
-    }
+    // int maxPerson = -1;
+    // int tmpScore = -1;
+    // for(i = 0; i < 4; i++){
+    //     if(pScore[i] > tmpScore){
+    //         maxPerson = i;//highest person
+    //         tmpScore = pScore[i];//highest type score
+    //     }
+    // }
+    // int numOfHightType = 0;
+    // int highPeople[4] = {0};
+    // for(i = 0; i < 4; i++){//count if more than one is higher
+    //     if(pScore[i] == tmpScore){
+    //         numOfHightType++;
+    //         highPeople[i] = 1;
+    //     }
+    // }
+    // if(numOfHightType == 1){
+    //     printf("Winner : P%d — ", maxPerson+1);
+    //     if(isStraightFlush(p[maxPerson])){
+    //         printf("straight flush\n");
+    //     }
+    //     else if(isFourOfAKind(p[maxPerson])){
+    //         printf("four-of-a-kind\n");
+    //     }
+    //     else if(isFullHouse(p[maxPerson])){
+    //         printf("full house\n");
+    //     }
+    //     else if(isFlush(p[maxPerson])){
+    //         printf("flush\n");
+    //     }
+    //     else if(isStraight(p[maxPerson])){
+    //         printf("straight\n");
+    //     }
+    //     else if(isThreeOfAKind(p[maxPerson])){
+    //         printf("three-of-a-kind\n");
+    //     }
+    //     else if(isTwoPairs(p[maxPerson])){
+    //         printf("two pairs\n");
+    //     }
+    //     else if(isPair(p[maxPerson])){
+    //         printf("pair\n");
+    //     }
+    //     else{//high card
+    //         printf("high card\n");
+    //     }
+    // }
+    // else if(numOfHightType > 1){
+    //     tmpScore = -1;
+    //     if(isStraightFlush(p[maxPerson])){
+    //         for(i = 0; i < numOfHightType; i++){
+    //             if(highPeople[i] == 1 && p[i][0] > tmpScore){
+    //                 maxPerson = i;
+    //                 tmpScore = p[i][0];
+    //             }
+    //         }
+    //         printf("Winner : P%d — ", maxPerson+1);
+    //         printf("straight flush\n");
+    //     }
+    //     else if(isFourOfAKind(p[maxPerson])){
+    //         for(i = 0; i < numOfHightType; i++){
+    //             if(highPeople[i] == 1 && p[i][0] == p[i][1] && p[i][0] > tmpScore){
+    //                 maxPerson = i;
+    //                 tmpScore = p[i][0];
+    //             }
+    //             else if(highPeople[i] == 1 && p[i][0] == p[i][1] && p[i][0] > tmpScore){//TODO 不只從頭算
+    //                 maxPerson = i;
+    //                 tmpScore = p[i][0];
+    //             }
+    //         }
+    //         printf("Winner : P%d — ", maxPerson+1);
+    //         printf("four-of-a-kind\n");
+    //     }
+    //     else if(isFullHouse(p[maxPerson])){
+    //         printf("full house\n");
+    //     }
+    //     else if(isFlush(p[maxPerson])){
+    //         printf("flush\n");
+    //     }
+    //     else if(isStraight(p[maxPerson])){
+    //         printf("straight\n");
+    //     }
+    //     else if(isThreeOfAKind(p[maxPerson])){
+    //         printf("three-of-a-kind\n");
+    //     }
+    //     else if(isTwoPairs(p[maxPerson])){
+    //         printf("two pairs\n");
+    //     }
+    //     else if(isPair(p[maxPerson])){
+    //         printf("pair\n");
+    //     }
+    //     else{//high card
+    //         printf("high card\n");
+    //     }
+    // }
 }
 
 int cmpfunc (const void * a, const void * b){
@@ -231,8 +241,16 @@ char getSuit(const int n){
     return suit;
 }
 
+int getSuitN(const int n){
+    return (n-1)/13+1;
+}
+
 int getRank(const int n){
-    return n%13;
+    return n%13+1;
+}
+
+int getScore(const int t, const int h, const int s){
+    return t*1000+h*10+s;
 }
 
 int isStraightFlush(const int p[]){
@@ -242,10 +260,11 @@ int isStraightFlush(const int p[]){
     getSuit(p[0]) == getSuit(p[3]) &&
     getSuit(p[0]) == getSuit(p[4]))
     {
-        if((p[0] == 13 && p[1] == 4 && p[2] == 3 && p[3] == 2 && p[4] == 1) ||
-           (p[0] == 26 && p[1] == 17 && p[2] == 16 && p[3] == 15 && p[4] == 14) ||
-           (p[0] == 39 && p[1] == 30 && p[2] == 29 && p[3] == 28 && p[4] == 27) ||
-           (p[0] == 52 && p[1] == 43 && p[2] == 42 && p[3] == 41 && p[4] == 40)){//straight flush a1234
+        // if((p[0] == 13 && p[1] == 4 && p[2] == 3 && p[3] == 2 && p[4] == 1) ||
+        //    (p[0] == 26 && p[1] == 17 && p[2] == 16 && p[3] == 15 && p[4] == 14) ||
+        //    (p[0] == 39 && p[1] == 30 && p[2] == 29 && p[3] == 28 && p[4] == 27) ||
+        //    (p[0] == 52 && p[1] == 43 && p[2] == 42 && p[3] == 41 && p[4] == 40))
+        if(getRank(p[0]) == 13 && getRank(p[1]) == 4 && getRank(p[2]) == 3 && getRank(p[3]) == 2 && getRank(p[4]) == 1){//straight flush a1234
             return 1;
             // printf("a1234\n");
         }
@@ -260,20 +279,57 @@ int isStraightFlush(const int p[]){
         return 0;
 }
 
-int isFourOfAKind(const int p[]){//TODO 中間可能會有其他，不能只有頭尾
-    if((getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[2]) && getRank(p[0]) == getRank(p[3])) ||
-       (getRank(p[1]) == getRank(p[2]) && getRank(p[1]) == getRank(p[3]) && getRank(p[1]) == getRank(p[4]))){//first 4 or last 4
-           return 1;
-       }
+int isFourOfAKind(const int p[]){
+    if(getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[2]) && getRank(p[0]) == getRank(p[3])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[2]) && getRank(p[0]) == getRank(p[4])){//first 4 or last 4
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[3]) && getRank(p[0]) == getRank(p[4])){//first 4 or last 4
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[2]) && getRank(p[0]) == getRank(p[3]) && getRank(p[0]) == getRank(p[4])){//first 4 or last 4
+        return 1;
+    }
+    else if(getRank(p[1]) == getRank(p[2]) && getRank(p[1]) == getRank(p[3]) && getRank(p[1]) == getRank(p[4])){//first 4 or last 4
+        return 2;
+    }
     else
         return 0;
 }
 
 int isFullHouse(const int p[]){
-    if((getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[2]) && getRank(p[3]) == getRank(p[4])) ||
-       (getRank(p[2]) == getRank(p[3]) && getRank(p[2]) == getRank(p[4]) && getRank(p[0]) == getRank(p[1]))){//first 3 or last 3
-           return 1;
-       }
+    if(getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[2]) && getRank(p[3]) == getRank(p[4])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[3]) && getRank(p[2]) == getRank(p[4])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[4]) && getRank(p[2]) == getRank(p[3])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[2]) && getRank(p[0]) == getRank(p[3]) && getRank(p[1]) == getRank(p[4])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[2]) && getRank(p[0]) == getRank(p[4]) && getRank(p[1]) == getRank(p[3])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[3]) && getRank(p[0]) == getRank(p[4]) && getRank(p[1]) == getRank(p[2])){
+        return 1;
+    }
+    else if(getRank(p[1]) == getRank(p[2]) && getRank(p[1]) == getRank(p[3]) && getRank(p[0]) == getRank(p[4])){
+        return 2;
+    }
+    else if(getRank(p[1]) == getRank(p[2]) && getRank(p[1]) == getRank(p[4]) && getRank(p[0]) == getRank(p[3])){
+        return 2;
+    }
+    else if(getRank(p[1]) == getRank(p[3]) && getRank(p[1]) == getRank(p[4]) && getRank(p[0]) == getRank(p[2])){
+        return 2;
+    }
+    else if(getRank(p[2]) == getRank(p[3]) && getRank(p[2]) == getRank(p[4]) && getRank(p[0]) == getRank(p[1])){
+        return 3;
+    }
     else
         return 0;
 }
@@ -303,33 +359,144 @@ int isStraight(const int p[]){
 }
 
 int isThreeOfAKind(const int p[]){
-    if((getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[2])) ||
-       (getRank(p[1]) == getRank(p[2]) && getRank(p[1]) == getRank(p[3])) ||
-       (getRank(p[2]) == getRank(p[3]) && getRank(p[2]) == getRank(p[4]))){//first 3 or mid 3 or last 3
-           return 1;
-       }
+    if(getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[2])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[3])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[1]) && getRank(p[0]) == getRank(p[4])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[2]) && getRank(p[0]) == getRank(p[3])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[2]) && getRank(p[0]) == getRank(p[4])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[3]) && getRank(p[0]) == getRank(p[4])){
+        return 1;
+    }
+    else if(getRank(p[1]) == getRank(p[2]) && getRank(p[1]) == getRank(p[3])){
+        return 2;
+    }
+    else if(getRank(p[1]) == getRank(p[2]) && getRank(p[1]) == getRank(p[4])){
+        return 2;
+    }
+    else if(getRank(p[1]) == getRank(p[3]) && getRank(p[1]) == getRank(p[4])){
+        return 2;
+    }
+    else if(getRank(p[2]) == getRank(p[3]) && getRank(p[2]) == getRank(p[4])){
+        return 3;
+    }
     else
         return 0;
 }
 
 int isTwoPairs(const int p[]){
-    if((getRank(p[0]) == getRank(p[1]) && getRank(p[2]) == getRank(p[3])) ||
-       (getRank(p[0]) == getRank(p[1]) && getRank(p[3]) == getRank(p[4])) ||
-       (getRank(p[1]) == getRank(p[2]) && getRank(p[3]) == getRank(p[4]))){//first 3 or mid 3 or last 3
-           return 1;
-       }
+    int i;
+    //01
+    if(getRank(p[0]) == getRank(p[1]) && getRank(p[2]) == getRank(p[3])){
+        i = (getRank(p[0])>getRank(p[2]))? 1: 3;
+        return i;
+    }
+    else if(getRank(p[0]) == getRank(p[1]) && getRank(p[2]) == getRank(p[4])){
+        i = (getRank(p[0])>getRank(p[2]))? 1: 3;
+        return i;
+    }
+    else if(getRank(p[0]) == getRank(p[1]) && getRank(p[3]) == getRank(p[4])){
+        i = (getRank(p[0])>getRank(p[3]))? 1: 4;
+        return i;
+    }
+    //02
+    else if(getRank(p[0]) == getRank(p[2]) && getRank(p[1]) == getRank(p[3])){
+        i = (getRank(p[0])>getRank(p[1]))? 1: 2;
+        return i;
+    }
+    else if(getRank(p[0]) == getRank(p[2]) && getRank(p[1]) == getRank(p[4])){
+        i = (getRank(p[0])>getRank(p[1]))? 1: 2;
+        return i;
+    }
+    else if(getRank(p[0]) == getRank(p[2]) && getRank(p[3]) == getRank(p[4])){
+        i = (getRank(p[0])>getRank(p[3]))? 1: 4;
+        return i;
+    }
+    //03
+    else if(getRank(p[0]) == getRank(p[3]) && getRank(p[1]) == getRank(p[2])){
+        i = (getRank(p[0])>getRank(p[1]))? 1: 2;
+        return i;
+    }
+    else if(getRank(p[0]) == getRank(p[3]) && getRank(p[1]) == getRank(p[4])){
+        i = (getRank(p[0])>getRank(p[1]))? 1: 2;
+        return i;
+    }
+    else if(getRank(p[0]) == getRank(p[3]) && getRank(p[2]) == getRank(p[4])){
+        i = (getRank(p[0])>getRank(p[2]))? 1: 3;
+        return i;
+    }
+    //04
+    else if(getRank(p[0]) == getRank(p[4]) && getRank(p[1]) == getRank(p[2])){
+        i = (getRank(p[0])>getRank(p[1]))? 1: 2;
+        return i;
+    }
+    else if(getRank(p[0]) == getRank(p[4]) && getRank(p[1]) == getRank(p[3])){
+        i = (getRank(p[0])>getRank(p[1]))? 1: 2;
+        return i;
+    }
+    else if(getRank(p[0]) == getRank(p[4]) && getRank(p[2]) == getRank(p[3])){
+        i = (getRank(p[0])>getRank(p[2]))? 1: 3;
+        return i;
+    }
+    //12
+    else if(getRank(p[1]) == getRank(p[2]) && getRank(p[3]) == getRank(p[4])){
+        i = (getRank(p[1])>getRank(p[3]))? 2: 4;
+        return i;
+    }
+    //13
+    else if(getRank(p[1]) == getRank(p[3]) && getRank(p[2]) == getRank(p[4])){
+        i = (getRank(p[1])>getRank(p[2]))? 2: 3;
+        return i;
+    }
+    //14
+    else if(getRank(p[1]) == getRank(p[4]) && getRank(p[2]) == getRank(p[3])){
+        i = (getRank(p[1])>getRank(p[2]))? 2: 3;
+        return i;
+    }
     else
         return 0;
 }
 
 int isPair(const int p[]){
-    if(getRank(p[0]) == getRank(p[1]) || getRank(p[0]) == getRank(p[2]) ||
-       getRank(p[0]) == getRank(p[3]) || getRank(p[0]) == getRank(p[4]) ||
-       getRank(p[1]) == getRank(p[2]) || getRank(p[1]) == getRank(p[3]) ||
-       getRank(p[1]) == getRank(p[4]) || getRank(p[2]) == getRank(p[3]) ||
-       getRank(p[2]) == getRank(p[4]) || getRank(p[3]) == getRank(p[4])){//first 3 or mid 3 or last 3
-           return 1;
-       }
+    if(getRank(p[0]) == getRank(p[1])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[2])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[3])){
+        return 1;
+    }
+    else if(getRank(p[0]) == getRank(p[4])){
+        return 1;
+    }
+    else if(getRank(p[1]) == getRank(p[2])){
+        return 2;
+    }
+    else if(getRank(p[1]) == getRank(p[3])){
+        return 2;
+    }
+    else if(getRank(p[1]) == getRank(p[4])){
+        return 2;
+    }
+    else if(getRank(p[2]) == getRank(p[3])){
+        return 3;
+    }
+    else if(getRank(p[2]) == getRank(p[4])){
+        return 3;
+    }
+    else if(getRank(p[3]) == getRank(p[4])){//first 3 or mid 3 or last 3
+        return 4;
+    }
     else
         return 0;
 }
