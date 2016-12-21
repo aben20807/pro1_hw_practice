@@ -80,17 +80,9 @@ int scoreOfCardType(const int card[]){
     }
     printCardsOnHand(tmp);
     for(i = 0; i < 4; i++){
-        // printf("%d ", isStraightFlush(p[i]));
-        // printf("%d ", isFourOfAKind(p[i]));
-        // printf("%d ", isFullHouse(p[i]));
-        // printf("%d ", isFlush(p[i]));
-        // printf("%d ", isStraight(p[i]));
-        // printf("%d ", isThreeOfAKind(p[i]));
-        // printf("%d ", isTwoPairs(p[i]));
-        // printf("%d\n", isPair(p[i]));
         if(isStraightFlush(p[i])){
-            pScore[i] = getScore(9, getRank(p[i][0]), getSuitN(p[i][0]));
-            printf("P%d:straight flush\n",i+1);
+            pScore[i] = getScore(9, getRank(p[i][isStraightFlush(p[i])-1]), getSuitN(p[i][isStraightFlush(p[i])-1]));
+            // printf("P%d:straight flush\n",i+1);
         }
         else if(isFourOfAKind(p[i])){
             pScore[i] = getScore(8, getRank(p[i][isFourOfAKind(p[i])-1]), getSuitN(p[i][isFourOfAKind(p[i])-1]));
@@ -132,103 +124,10 @@ int scoreOfCardType(const int card[]){
             // printf("P%d:high card\n",i+1);
         }
     }
+    printf("\n");
     for(i = 0; i < 4; i++){
         printf("P%d: %d\n", i+1, pScore[i]);
     }
-    // int maxPerson = -1;
-    // int tmpScore = -1;
-    // for(i = 0; i < 4; i++){
-    //     if(pScore[i] > tmpScore){
-    //         maxPerson = i;//highest person
-    //         tmpScore = pScore[i];//highest type score
-    //     }
-    // }
-    // int numOfHightType = 0;
-    // int highPeople[4] = {0};
-    // for(i = 0; i < 4; i++){//count if more than one is higher
-    //     if(pScore[i] == tmpScore){
-    //         numOfHightType++;
-    //         highPeople[i] = 1;
-    //     }
-    // }
-    // if(numOfHightType == 1){
-    //     printf("Winner : P%d — ", maxPerson+1);
-    //     if(isStraightFlush(p[maxPerson])){
-    //         printf("straight flush\n");
-    //     }
-    //     else if(isFourOfAKind(p[maxPerson])){
-    //         printf("four-of-a-kind\n");
-    //     }
-    //     else if(isFullHouse(p[maxPerson])){
-    //         printf("full house\n");
-    //     }
-    //     else if(isFlush(p[maxPerson])){
-    //         printf("flush\n");
-    //     }
-    //     else if(isStraight(p[maxPerson])){
-    //         printf("straight\n");
-    //     }
-    //     else if(isThreeOfAKind(p[maxPerson])){
-    //         printf("three-of-a-kind\n");
-    //     }
-    //     else if(isTwoPairs(p[maxPerson])){
-    //         printf("two pairs\n");
-    //     }
-    //     else if(isPair(p[maxPerson])){
-    //         printf("pair\n");
-    //     }
-    //     else{//high card
-    //         printf("high card\n");
-    //     }
-    // }
-    // else if(numOfHightType > 1){
-    //     tmpScore = -1;
-    //     if(isStraightFlush(p[maxPerson])){
-    //         for(i = 0; i < numOfHightType; i++){
-    //             if(highPeople[i] == 1 && p[i][0] > tmpScore){
-    //                 maxPerson = i;
-    //                 tmpScore = p[i][0];
-    //             }
-    //         }
-    //         printf("Winner : P%d — ", maxPerson+1);
-    //         printf("straight flush\n");
-    //     }
-    //     else if(isFourOfAKind(p[maxPerson])){
-    //         for(i = 0; i < numOfHightType; i++){
-    //             if(highPeople[i] == 1 && p[i][0] == p[i][1] && p[i][0] > tmpScore){
-    //                 maxPerson = i;
-    //                 tmpScore = p[i][0];
-    //             }
-    //             else if(highPeople[i] == 1 && p[i][0] == p[i][1] && p[i][0] > tmpScore){//TODO 不只從頭算
-    //                 maxPerson = i;
-    //                 tmpScore = p[i][0];
-    //             }
-    //         }
-    //         printf("Winner : P%d — ", maxPerson+1);
-    //         printf("four-of-a-kind\n");
-    //     }
-    //     else if(isFullHouse(p[maxPerson])){
-    //         printf("full house\n");
-    //     }
-    //     else if(isFlush(p[maxPerson])){
-    //         printf("flush\n");
-    //     }
-    //     else if(isStraight(p[maxPerson])){
-    //         printf("straight\n");
-    //     }
-    //     else if(isThreeOfAKind(p[maxPerson])){
-    //         printf("three-of-a-kind\n");
-    //     }
-    //     else if(isTwoPairs(p[maxPerson])){
-    //         printf("two pairs\n");
-    //     }
-    //     else if(isPair(p[maxPerson])){
-    //         printf("pair\n");
-    //     }
-    //     else{//high card
-    //         printf("high card\n");
-    //     }
-    // }
 }
 
 int cmpfunc (const void * a, const void * b){
@@ -246,7 +145,7 @@ int getSuitN(const int n){
 }
 
 int getRank(const int n){
-    return n%13+1;
+    return (n%13 != 0)? n%13: 13;//if A return 13
 }
 
 int getScore(const int t, const int h, const int s){
@@ -260,12 +159,8 @@ int isStraightFlush(const int p[]){
     getSuit(p[0]) == getSuit(p[3]) &&
     getSuit(p[0]) == getSuit(p[4]))
     {
-        // if((p[0] == 13 && p[1] == 4 && p[2] == 3 && p[3] == 2 && p[4] == 1) ||
-        //    (p[0] == 26 && p[1] == 17 && p[2] == 16 && p[3] == 15 && p[4] == 14) ||
-        //    (p[0] == 39 && p[1] == 30 && p[2] == 29 && p[3] == 28 && p[4] == 27) ||
-        //    (p[0] == 52 && p[1] == 43 && p[2] == 42 && p[3] == 41 && p[4] == 40))
         if(getRank(p[0]) == 13 && getRank(p[1]) == 4 && getRank(p[2]) == 3 && getRank(p[3]) == 2 && getRank(p[4]) == 1){//straight flush a1234
-            return 1;
+            return 2;
             // printf("a1234\n");
         }
         for(j = 0; j < 4; j++){//straight flush
@@ -346,8 +241,8 @@ int isFlush(const int p[]){
 
 int isStraight(const int p[]){
     int j;
-    if(getRank(p[0]) == 0 && getRank(p[1]) == 4 && getRank(p[2]) == 3 && getRank(p[3]) == 2 && getRank(p[4]) == 1){//a1234
-        return 1;
+    if(getRank(p[0]) == 13 && getRank(p[1]) == 4 && getRank(p[2]) == 3 && getRank(p[3]) == 2 && getRank(p[4]) == 1){//a1234
+        return 2;
         // printf("a1234\n");
     }
     for(j = 0; j < 4; j++){//straight flush
@@ -500,33 +395,3 @@ int isPair(const int p[]){
     else
         return 0;
 }
-
-// void analyze_hand(void)
-// {
-//     int num_consec = 0;
-//     int rank, suit;
-//     straight = false;
-//     flush = false;
-//     four = false;
-//     three = false;
-//     pairs = 0;
-//     /* check for flush */
-//     for (suit = 0; suit < NUM_SUITS; suit++)
-//         if (num_in_suit[suit] == NUM_CARDS)
-//             flush = true;
-//     /* check for straight */
-//     rank = 0;
-//     while (num_in_rank[rank] == 0) rank++;
-//     for (; rank < NUM_RANKS && num_in_rank[rank] > 0; rank++)
-//         num_consec++;
-//     if (num_consec == NUM_CARDS) {
-//         straight = true;
-//         return;
-//     }
-//     /* check for 4-of-a-kind, 3-of-a-kind, and pairs */
-//     for (rank = 0; rank < NUM_RANKS; rank++) {
-//         if (num_in_rank[rank] == 4) four = true;
-//         if (num_in_rank[rank] == 3) three = true;
-//         if (num_in_rank[rank] == 2) pairs++;
-//     }
-// }
